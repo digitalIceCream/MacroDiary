@@ -12,17 +12,18 @@ import macroDiaryClasses as mdc
 # Functions
 
 def create_meal():
+    global mealName
+    global meal
     while True:
         print("Give your meal a name.")
-        a = input()
+        mealName = input()
 
-        print("Is \"",a,"\" correct? (y/n)")
+        print("Is \"",mealName,"\" correct? (y/n)")
         b = input()
         b = b.lower()
 
         if b == "y":
-            global m1
-            m1 = mdc.meal(a)
+            meal = {mealName:None}
             break
 
         else:
@@ -30,22 +31,23 @@ def create_meal():
             continue
 
 def add_ingredients():
+    global mealName
     index = 0
     global ingredients
-    ingredients = []
+    ingredients = {}
 
     while True:
-        print("Add up to 23 ingredients to",m1.name,"and type \"stop\" when you are finished.")
+        print("Add up to 23 ingredients to",mealName ,"and type \"stop\" when you are finished.")
         for i in range(23):
             print("Ingredient number",index + 1,"is...")
-            a = input()
-            if a == "stop":
+            b = input()
+            if b == "stop":
                 print("Your ingredients are:")
                 for i in ingredients:
                     print(i)
-                b = input("Is that correct? (y/n)  ")
-                b = b.lower()
-                if b == "y":
+                c = input("Is that correct? (y/n)  ")
+                c = c.lower()
+                if c == "y":
                     break
                 else:
                     print("Start over then.")
@@ -53,11 +55,11 @@ def add_ingredients():
                     index = 0
                     continue
             else:
-                ingredients.append(a)
+                ingredients.update({b: None})
                 index += 1
                 continue
         break
-    
+
 def add_macros():
     fat = "Fat"
     sumFat = 0
@@ -65,10 +67,14 @@ def add_macros():
     sumCarbs = 0
     proteins = "Proteins"
     sumProteins = 0
+    global f
+    global c
+    global p
+
 
     while True:
         check = True
-        print("Add macros for \"", m1.name,"\":")
+        print("Add macros for \"", mealName,"\":")
         for x in ingredients:
             print(x,"has:")
             f = input("         Fat: ")
@@ -81,12 +87,24 @@ def add_macros():
                 sumCarbs = sumCarbs + float(c)
                 sumProteins = sumProteins + float(p)
                 y = {fat: f, carbs: c, proteins: p}
-                m1.add_ingredient({x: y})
+                meal.add_ingredient({x: y})
             else:
                 print("Then start over.")
                 check = False
                 break
         if check == False:
             continue
-        m1.sum_macros({fat: sumFat, carbs: sumCarbs, proteins: sumProteins})
+        meal.sum_macros({fat: sumFat, carbs: sumCarbs, proteins: sumProteins})
         break
+
+def total():
+    totalFat = 0
+    totalCarbs = 0
+    totalProteins = 0
+    global total
+
+    totalFat = totalFat + float(f) 
+    totalCarbs = totalCarbs + float(c)
+    totalProteins = totalProteins + float(p)
+
+    total = {"totalFat": f, "totalCarbs": c, "totalProteins": p}
