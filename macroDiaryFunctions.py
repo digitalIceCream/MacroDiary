@@ -7,8 +7,6 @@ Filename:		macroDiaryFunctions.py
 """
 # Imports
 
-import macroDiaryClasses as mdc
-
 # Functions
 
 def create_meal():
@@ -32,9 +30,10 @@ def create_meal():
 
 def add_ingredients():
     global mealName
-    index = 0
+    global meal
     global ingredients
     ingredients = {}
+    index = 0
 
     while True:
         print("Add up to 23 ingredients to",mealName ,"and type \"stop\" when you are finished.")
@@ -43,7 +42,7 @@ def add_ingredients():
             b = input()
             if b == "stop":
                 print("Your ingredients are:")
-                for i in ingredients:
+                for i in ingredients.keys():
                     print(i)
                 c = input("Is that correct? (y/n)  ")
                 c = c.lower()
@@ -62,49 +61,42 @@ def add_ingredients():
 
 def add_macros():
     fat = "Fat"
-    sumFat = 0
+    sumFat = 0.0
     carbs = "Carbs"
-    sumCarbs = 0
+    sumCarbs = 0.0
     proteins = "Proteins"
-    sumProteins = 0
-    global f
-    global c
-    global p
-
+    sumProteins = 0.0
+    global ingredients
+    global mealTotal
 
     while True:
         check = True
         print("Add macros for \"", mealName,"\":")
         for x in ingredients:
             print(x,"has:")
-            f = input("         Fat: ")
-            c = input("         Carbs: ")
-            p = input("         Proteins: ")
+            f = float(input("         Fat: "))
+            c = float(input("         Carbs: "))
+            p = float(input("         Proteins: "))
             a = input("Are those entries correct? (y/n) ")
             a = a.lower()
             if a == "y":
-                sumFat = sumFat + float(f)
-                sumCarbs = sumCarbs + float(c)
-                sumProteins = sumProteins + float(p)
+                sumFat = sumFat + f
+                sumCarbs = sumCarbs + c
+                sumProteins = sumProteins + p
                 y = {fat: f, carbs: c, proteins: p}
-                meal.add_ingredient({x: y})
+                ingredients.update({x: y})
             else:
                 print("Then start over.")
                 check = False
                 break
         if check == False:
             continue
-        meal.sum_macros({fat: sumFat, carbs: sumCarbs, proteins: sumProteins})
+        mealTotal = {fat: sumFat, carbs: sumCarbs, proteins: sumProteins}
         break
+    return (sumFat, sumCarbs, sumProteins)
 
-def total():
-    totalFat = 0
-    totalCarbs = 0
-    totalProteins = 0
-    global total
-
-    totalFat = totalFat + float(f) 
-    totalCarbs = totalCarbs + float(c)
-    totalProteins = totalProteins + float(p)
-
-    total = {"totalFat": f, "totalCarbs": c, "totalProteins": p}
+def rolling_total(a, b, c):
+    global rolling_total
+    totalFat
+    rolling_total = {
+            

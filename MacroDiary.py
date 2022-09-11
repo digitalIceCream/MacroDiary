@@ -12,21 +12,31 @@ import macroDiaryFunctions as mdf
 
 # Main Program
 
+global meal
+global mealName
+global ingredients
+global mealTotal
 global total
+global totalFat 
+totalFat = 0.0
+global totalCarbs
+totalCarbs = 0.0
+global totalProteins
+totalProteins = 0.0
+global rollingTotal 
 
 while True:
     mdf.create_meal()
     print(mdf.mealName, "created.")
     mdf.add_ingredients()
-    print(mdf.ingredients)
     mdf.add_macros()
-    """
-    print(mdf.meal.name,"has a total macro count of:")
-    for k, v in mdf.meal.totalMacros.items():
+
+    print(mdf.mealName,"has a total macro count of:")
+    for k, v in mdf.mealTotal.items():
         print(k, v)
 
-    print("Rolling Total so far for:")
-    for k, v in total.items():
+    print(datetime.date.today(),"has a rolling total of:")
+    for k, v in mdf.rollingTotal.items():
         print(k, v)
 
     a = input("Add meal to diary? (y/n) ")
@@ -34,9 +44,9 @@ while True:
     if a == "y":
         today = datetime.date.today()
         file = open(str(today), 'a')
-        file.write(mdf.meal.name)
+        file.write(mdf.mealName)
         file.write(" has a total macro count of:\n")
-        for k, v in mdf.meal.totalMacros.items():
+        for k, v in mdf.mealTotal.items():
             macro = (k, v)
             file.write(str(macro))
             file.write("\n")
@@ -44,11 +54,9 @@ while True:
         file.write("\n\n")
         file.close()
         continue
-    """
-    #else:
-    print("Did not write to diary.")
-    #    break
-
+    else:
+        print("Did not write to diary.")
+        break
 ####END PROMPT##########
 
 print("End of program.")
