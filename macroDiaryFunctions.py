@@ -17,8 +17,7 @@ def create_meal():
         mealName = input()
 
         print("Is \"",mealName,"\" correct? (y/n)")
-        b = input()
-        b = b.lower()
+        b = input().lower()
 
         if b == "y":
             meal = {mealName:None}
@@ -80,20 +79,20 @@ def add_macros():
             a = input("Are those entries correct? (y/n) ")
             a = a.lower()
             if a == "y":
-                sumFat = sumFat + f
-                sumCarbs = sumCarbs + c
-                sumProteins = sumProteins + p
+                sumFat += f
+                sumCarbs += c
+                sumProteins += p
                 y = {fat: f, carbs: c, proteins: p}
                 ingredients.update({x: y})
             else:
                 print("Then start over.")
                 check = False
                 break
-        if check == False:
+        if not check:
             continue
         mealTotal = {fat: sumFat, carbs: sumCarbs, proteins: sumProteins}
         break
-    return (sumFat, sumCarbs, sumProteins)
+    return sumFat, sumCarbs, sumProteins
 
 def rolling_total(a, b, c):
     global rolling_total
