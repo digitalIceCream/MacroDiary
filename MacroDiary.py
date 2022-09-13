@@ -134,7 +134,7 @@ while True:
         for k, v in mealTotal.items():
             macro = (k, v)
             file.write(str(macro))
-            file.write("\n")
+            file.write("\n\n\n")
         file.write(str(today))
         file.write(" has a rolling total of:\n")
         for k, v in rollingTotal.items():
