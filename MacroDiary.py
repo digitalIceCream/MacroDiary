@@ -1,153 +1,51 @@
 #!/usr/bin/python3
 """
 Author:			John-Philipp Vogt
-Date:			2022-09-08
-Synopsis:		
-Filename:		main.py
+Date:			2022-09-14
+Synopsis:		A CLI programme that guides the user to record a single meal with its weighted macros.
+                It writes the user input to file, showing the name of the meal, its ingredients and their macro
+                nutrients content, as provided by the user. It also stores the input encoded in json separately.
+                Technically, all user input it inserted into dicts{}, resulting in nested dicts{}.
+Filename:		MacroDiary.py
 """
 # Imports
-
+import MacroDiaryFunctions as mdf
 import datetime
+# import json
+# import pprint
 
-# Functions
+# Main program -- prep
+today = str(datetime.date.today())
+# Main program -- exec
 
-def create_meal():
-    global mealName
-    global meal
-    while True:
-        print("Give your meal a name.")
-        mealName = input()
-
-        print("Is \"",mealName,"\" correct? (y/n)")
-        b = input().lower()
-
-        if b == "y":
-            meal = {mealName:None}
-            break
-
-        else:
-            print("Please try again.")
-            continue
-
-def add_ingredients():
-    global mealName
-    global meal
-    global ingredients
-    ingredients = {}
-    index = 0
-
-    while True:
-        print("Add up to 23 ingredients to",mealName ,"and type \"stop\" when you are finished.")
-        for i in range(23):
-            print("Ingredient number",index + 1,"is...")
-            b = input()
-            if b == "stop":
-                print("Your ingredients are:")
-                for i in ingredients.keys():
-                    print(i)
-                c = input("Is that correct? (y/n)  ")
-                c = c.lower()
-                if c == "y":
-                    break
-                else:
-                    print("Start over then.")
-                    ingredients.clear()
-                    index = 0
-                    continue
-            else:
-                ingredients.update({b: None})
-                index += 1
-                continue
-        break
-
-def add_macros():
-    fat = "Fat"
-    sumFat = 0.0
-    global totalFat
-    carbs = "Carbs"
-    sumCarbs = 0.0
-    global totalCarbs
-    proteins = "Proteins"
-    sumProteins = 0.0
-    global totalProteins
-    global ingredients
-    global mealTotal
-    global rollingTotal
-
-    while True:
-        check = True
-        print("Add macros for \"", mealName,"\":")
-        for x in ingredients:
-            print(x,"has:")
-            f = float(input("         Fat: "))
-            c = float(input("         Carbs: "))
-            p = float(input("         Proteins: "))
-            a = input("Are those entries correct? (y/n) ")
-            a = a.lower()
-            if a == "y":
-                sumFat += f
-                sumCarbs += c
-                sumProteins += p
-                y = {fat: f, carbs: c, proteins: p}
-                ingredients.update({x: y})
-            else:
-                print("Then start over.")
-                ingredients.clear()
-                check = False
-                break
-        if not check:
-            continue
-        mealTotal = {fat: sumFat, carbs: sumCarbs, proteins: sumProteins}
-        totalFat += sumFat
-        totalCarbs += sumCarbs
-        totalProteins += sumProteins
-        rollingTotal = {fat: totalFat, carbs: totalCarbs, proteins: totalProteins}
-        break
-
-# Main Program
-
-totalFat = 0.0
-totalCarbs = 0.0
-totalProteins = 0.0
+print('Welcome to the MacroDiary!!\nWhat do you want to do?')
 
 while True:
-    create_meal()
-    print(mealName, "created.")
-    add_ingredients()
-    add_macros()
-
-    print(mealName,"has a total macro count of:")
-    for k, v in mealTotal.items():
-        print(k, v)
-
-    print(datetime.date.today(),"has a rolling total of:")
-    for k, v in rollingTotal.items():
-        print(k, v)
-
-    a = input("Add meal to diary? (y/n) ")
-    a = a.lower()
-    if a == "y":
-        today = datetime.date.today()
-        file = open(str(today), 'a')
-        file.write(mealName)
-        file.write(" has a total macro count of:\n")
-        for k, v in mealTotal.items():
-            macro = (k, v)
-            file.write(str(macro))
-            file.write("\n\n\n")
-        file.write(str(today))
-        file.write(" has a rolling total of:\n")
-        for k, v in rollingTotal.items():
-            total = (k, v)
-            file.write(str(total))
-            file.write("\n")
-        file.write("-------------------------------------")
-        file.write("\n\n")
-        file.close()
+    choice = mdf.get_choice()
+    if choice == '1':  # Shows today's total (tbi)
+        print('Placeholder')
+        #  Insert function here that retrieves all totals for a given day (or just today).
+        #  It should retrieve those that mdf.store_total_as_json() can write to storage.
+        #  It should then sum them up and display the sum.
+        #  And then it should continue to the main menu.
         continue
-    else:
-        print("Did not write to diary.")
-        break
-####END PROMPT##########
 
-print("End of program.")
+    elif choice == '2':  # Record a new meal
+        meal = mdf.create_meal()  # Creates data structure ({'name': None}), and a name (str), returns as tuple
+        meal = mdf.add_ingredients(meal[0], meal[1])  # Adds ingredients as dicts to previous dict, returns tuple
+        meal = mdf.add_macros(meal[0], meal[1])  # Adds macros as dicts to previous dict, returns tuple
+        meal = mdf.sum_macros(meal[0], meal[1])  # Sums given macros for meal, returns tuple
+        mdf.store_meal_as_json(today, meal[0], meal[1], meal[2])  # Writes json-encoded dict to file
+        mdf.store_total_as_json(today, meal[0], meal[1], meal[2])  # Write json-encoded dict to file
+        mdf.write_meal_to_file(today, meal[0], meal[1], meal[2])  # Writes meal, ingredients, macros and total to file
+        continue
+
+    elif choice == '3':  # Exits
+        print('Exiting programme.')
+        break
+
+    else:  # Input confirmation
+        print('Invalid input')
+        continue
+
+print("End of program.")  # Signal prompt that the show is over

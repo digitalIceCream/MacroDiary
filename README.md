@@ -4,9 +4,9 @@ README for MacroDiary
 
 # Intention:
 
-The purpose of this .py script is to start working on a program which will develop towards a project to learn programming.
-To this end the idea is to start crafting an MVP that can be done in one to two days. 
-At its final stage, I want this project to be implemented in python3, Java and C, with the use of SQL.
+The purpose of this .py script is to start working on a program to learn programming in python3.
+To this end the idea is to start crafting an MVP that can be done in one to two days (LOL). 
+At its final stage, I want this project to be implemented in python3, Java and C (oh boi), with the use of SQL.
 
 ## Final Vision:
 A gui program that let's the user store food (products, natural processed foods, fruits, vegetables, meats etc.) in an SQL db.
@@ -23,4 +23,6 @@ These meals shoulb be saved a blocks of data written out.
 
 ## Notes:
 
+So far so good:
+It does almost what I want it to -- all but being able to retrieve meals written as .json in a previous session, as a python object.
 
