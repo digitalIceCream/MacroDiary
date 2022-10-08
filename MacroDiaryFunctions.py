@@ -98,11 +98,11 @@ def sum_macros(meal: dict, meal_name: str) -> tuple:
                 for key2, value2 in value1.items():
                     #  print(key2, value2)
                     if key2 == 'Fat':
-                        fat_in_total += int(value2)
+                        fat_in_total += float(value2)
                     if key2 == 'Carbs':
-                        carbs_in_total += int(value2)
+                        carbs_in_total += float(value2)
                     if key2 == 'Proteins':
-                        proteins_in_total += int(value2)
+                        proteins_in_total += float(value2)
 
         #  total is kept separate: Could/should go into meal{}?
         total_macros = {str(meal_name): {'Fat': fat_in_total, 'Carbs': carbs_in_total, 'Proteins': proteins_in_total}}
