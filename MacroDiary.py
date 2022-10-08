@@ -10,16 +10,21 @@ Filename:		MacroDiary.py
 """
 # Imports
 import MacroDiaryFunctions as mdf
+import ChoiceOne as c1
+import ChoiceTwo as c2
+import ChoiceThree as c3
 import datetime
 # import json
 # import pprint
 
 # Main program -- prep
 today = str(datetime.date.today())
+
 # Main program -- exec
 
 print('Welcome to the MacroDiary!!\nWhat do you want to do?')
 
+# Main programme loop
 while True:
     choice = mdf.get_choice()
     if choice == '1':  # Shows today's total (tbi)
