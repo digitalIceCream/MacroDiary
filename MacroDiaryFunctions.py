@@ -7,6 +7,7 @@ Filename:		MacroDiaryFunctions.py
 """
 # Imports
 import json
+from os.path import exists
 
 
 def get_choice() -> str:
@@ -17,6 +18,35 @@ def get_choice() -> str:
     choice = input('Your choice ->  ')
     return choice
 
+def retrieve_todays_total(today: str) -> tuple:
+    filename = '_'.join([today, 'total'])
+    filename = ''.join([filename, '.json'])
+
+    if exists(filename):
+        with open(filename, 'r') as file:
+            daily_total = json.load(file)
+            print('Your total macros recorded for today are:\n')
+            for key0, value0 in daily_total.items():
+                for key1, value1 in value0.items():
+                    print(key1, value1)
+            print('Your left over macro budget for today is:')
+            for key0, value0 in daily_total.items():
+                for key1, value1 in value0.items():
+                    if key1 == 'Fat':
+                        value1 = 110 - value1
+                        print(key1, value1)
+                    if key1 == 'Carbs':
+                        value1 = 24 - value1
+                        print(key1, value1)
+                    if key1 == 'Proteins':
+                        value1 = 100 - value1
+                        print(key1, value1)
+                return
+            
+    else:
+        print('No total recorded for', today,'.')
+        return
+            
 
 def create_meal() -> tuple:
     """ Return object used throughout the functions as a container for all further user-input data """
@@ -52,7 +82,7 @@ def add_ingredients(meal: dict, meal_name: str) -> tuple:
                 d = input('Is that correct? (y/n)  ').lower()
                 if d == 'y':
                     meal.update({str(meal_name): ingredients})
-                    return meal, meal_name
+                    return meal, meal_name;
                 else:
                     print('Start over then.')
                     ingredients.clear()
@@ -87,7 +117,7 @@ def add_macros(meal: dict, meal_name: str) -> tuple:
             continue
 
 
-def sum_macros(meal: dict, meal_name: str) -> tuple:
+def sum_macros(meal: dict, meal_name: str, today: str) -> tuple:
     """ To sum fats, carbs, and proteins of each ingredient to calculate meal's total macros """
     fat_in_total = 0
     carbs_in_total = 0
@@ -105,7 +135,7 @@ def sum_macros(meal: dict, meal_name: str) -> tuple:
                         proteins_in_total += float(value2)
 
         #  total is kept separate: Could/should go into meal{}?
-        total_macros = {str(meal_name): {'Fat': fat_in_total, 'Carbs': carbs_in_total, 'Proteins': proteins_in_total}}
+        total_macros = {str(today): {'Fat': fat_in_total, 'Carbs': carbs_in_total, 'Proteins': proteins_in_total}}
         for key0, value0 in total_macros.items():
             for key1, value1 in value0.items():
                 print(meal_name, 'contains in total', value1, 'grams of', key1)
@@ -114,7 +144,7 @@ def sum_macros(meal: dict, meal_name: str) -> tuple:
 
 
 #  There's no practical use for this function, just for shits'n'giggles so far
-def store_meal_as_json(today: str, meal: dict, meal_name: str, total_macros: dict):
+def store_meal_as_json(today: str, meal: dict, meal_name: str, total_macros: dict) -> None:
     while True:
         a = input('Store meal? (y/n) ').lower()
         if a == 'y':
@@ -132,17 +162,65 @@ def store_meal_as_json(today: str, meal: dict, meal_name: str, total_macros: dic
 def store_total_as_json(today: str, meal: dict, meal_name: str, total_macros: dict) -> None:
     """ To store total of a given meal for later data processing (daily totals)"""
     while True:
-        a = input('Store total? (y/n) ').lower()
-        if a == 'y':
-            filename = '_'.join([today, meal_name, 'total'])
-            filename = ''.join([filename, '.json'])
-            with open(filename, 'a') as totaldotjson:
-                json.dump(total_macros, totaldotjson)
-            return
+        for key0, value0 in total_macros.items():
+            for key1, value1 in value0.items():
+                if key1 == 'Fat':
+                    fat_to_add = value1
+                if key1 == 'Carbs':
+                    carbs_to_add = value1
+                if key1 == 'Proteins':
+                    proteins_to_add = value1
+            print(fat_to_add, carbs_to_add, proteins_to_add)
+        
+        filename = '_'.join([today, 'total'])
+        filename = ''.join([filename, '.json'])
 
+        if exists(filename):
+            input_check = input('Add to daily total? (y/n) ').lower()
+            if input_check == 'y':
+                with open(filename, 'r') as mealdotjson:
+                    last_total = json.load(mealdotjson)
+                    #print(last_total)
+                    for key0, value0 in last_total.items():
+                        for key1, value1 in value0.items():
+                            if key1 == 'Fat':
+                                fat_to_add = value1 + fat_to_add
+                                #print(key1, value1, fat_to_add) 
+                            if key1 == 'Carbs':
+                                carbs_to_add = value1 + carbs_to_add
+                                #print(key1, value1, carbs_to_add) 
+                            if key1 == 'Proteins':
+                                proteins_to_add = value1 + proteins_to_add
+                                #print(key1, value1, proteins_to_add) 
+                    #print(fat_to_add, carbs_to_add, proteins_to_add)
+
+                for key0, value0 in last_total.items():
+                    for key1, value1 in value0.items():
+                        if key1 == 'Fat':
+                            #print(fat_to_add)
+                            value0.update({key1: fat_to_add})
+                        if key1 == 'Carbs':
+                            #print(carbs_to_add)
+                            value0.update({key1: carbs_to_add})
+                        if key1 == 'Proteins':
+                            #print(proteins_to_add)
+                            value0.update({key1: proteins_to_add})
+
+                with open(filename, 'w') as mealdotjson:
+                    json.dump(last_total, mealdotjson)
+                    return
+            else:
+                print('Meal not stored.')
+                return
         else:
-            print('Meal not stored.')
-            break
+            input_check = input('Store total? (y/n) ').lower()
+            if input_check == 'y':
+                with open(filename, 'w') as totaldotjson:
+                    json.dump(total_macros, totaldotjson)
+                return
+            else:
+                print('Meal not stored.')
+                return
 
 
 def write_meal_to_file(today: str, meal: dict, meal_name: str, total_macros: dict) -> None:
@@ -152,7 +230,7 @@ def write_meal_to_file(today: str, meal: dict, meal_name: str, total_macros: dic
         if a == 'y':
             filename = '_'.join([today, meal_name])
             with open(filename, 'a') as file:
-                file.write('------------------------\n')
+                file.write('------------------------\n\n')
                 file.write(today)
                 file.write('\n')
                 file.write(meal_name)
@@ -178,4 +256,4 @@ def write_meal_to_file(today: str, meal: dict, meal_name: str, total_macros: dic
                 return
         else:
             print('Did not write to file.')
-            break
+            return
