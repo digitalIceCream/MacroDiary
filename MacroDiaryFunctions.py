@@ -25,11 +25,11 @@ def retrieve_todays_total(today: str) -> tuple:
     if exists(filename):
         with open(filename, 'r') as file:
             daily_total = json.load(file)
-            print('Your total macros recorded for today are:\n')
+            print('\nYour total macros recorded for today are:\n')
             for key0, value0 in daily_total.items():
                 for key1, value1 in value0.items():
                     print(key1, value1)
-            print('Your left over macro budget for today is:')
+            print('\nYour left over macro budget for today is:\n')
             for key0, value0 in daily_total.items():
                 for key1, value1 in value0.items():
                     if key1 == 'Fat':
@@ -44,7 +44,7 @@ def retrieve_todays_total(today: str) -> tuple:
                 return
             
     else:
-        print('No total recorded for', today,'.')
+        print('\nNo total recorded for', today,'.\n')
         return
             
 
