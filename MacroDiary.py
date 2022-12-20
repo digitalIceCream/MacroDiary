@@ -22,7 +22,13 @@ import datetime
 
 # Main program -- prep
 
-today = str(datetime.date.today())
+dateX = datetime.date.today() # 
+today = str(dateX)            # Define current date as string
+
+file_total = '_'.join([today, 'total'])     #
+file_total = ''.join([file_total, '.json']) # Define filename for cumulative daily total
+
+path = ''.join(['../../../Documents/Keto/Food_Log/', str(dateX.year), '/', dateX.strftime("%B"), '/']) # This path has to be adapted to wherever you want to save your meals (and *FROM* wherever...)
 
 # Main program -- exec
 
@@ -32,7 +38,7 @@ print('\nWelcome to the MacroDiary!!\nWhat do you want to do?\n')
 while True:
     choice = mdf.get_choice()
     if choice == '1':  # Shows today's total (tbi)
-        mdf.retrieve_todays_total(today)
+        mdf.retrieve_todays_total(file_total, path)
         #  Insert function here that retrieves all totals for a given day (or just today).
         #  It should retrieve those that mdf.store_total_as_json() can write to storage.
         #  It should then sum them up and display the sum.
@@ -44,9 +50,9 @@ while True:
         meal = mdf.add_ingredients(meal[0], meal[1])  # Adds ingredients as dicts to previous dict, returns tuple
         meal = mdf.add_macros(meal[0], meal[1])  # Adds macros as dicts to previous dict, returns tuple
         meal = mdf.sum_macros(meal[0], meal[1], today)  # Sums given macros for meal, returns tuple
-        mdf.store_meal_as_json(today, meal[0], meal[1], meal[2])  # Writes json-encoded dict to file (deprecated for now)
-        mdf.store_total_as_json(today, meal[0], meal[1], meal[2])  # Write json-encoded dict to file
-        mdf.write_meal_to_file(today, meal[0], meal[1], meal[2])  # Writes meal, ingredients, macros and total to file
+        mdf.store_meal_as_json(today, path,  meal[0], meal[1], meal[2])  # Writes json-encoded dict to file (deprecated for now)
+        mdf.store_total_as_json(file_total, path, meal[0], meal[1], meal[2])  # Write json-encoded dict to file
+        mdf.write_meal_to_file(today, path, meal[0], meal[1], meal[2])  # Writes meal, ingredients, macros and total to file
         continue
 
     elif choice == '3':  # Exits
